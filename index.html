@@ -759,14 +759,14 @@
 
 <header class="hero">
     <div class="series-label">NVIDIA GPU Architectures Series — Presentation 30</div>
-    <h1>Inside <span class="accent">Ada Lovelace</span> &mdash; AD102, 96 MB L2, 4th-Gen RT</h1>
-    <p class="subtitle">A low-level look at the 2022 architecture that put a 96 MB L2 cache on a graphics die, gave us 4th-gen RT cores with opacity and displaced micro-meshes, and split FP8 between L40S (yes) and RTX 4090 (no). Block diagrams, arithmetic, TSMC 4N process, voltages, clocks, GDDR6X memory, no-NVLink consequences.</p>
+    <h1>Inside <span class="accent">Ada Lovelace</span> &mdash; AD102, 96 MB L2, 3rd-Gen RT</h1>
+    <p class="subtitle">A low-level look at the 2022 architecture that put a 96 MB L2 cache on a graphics die, gave us 3rd-gen RT cores with opacity and displaced micro-meshes, and added an FP8 datapath to 4th-gen tensor cores across the whole Ada line. Block diagrams, arithmetic, TSMC 4N process, voltages, clocks, GDDR6X memory, no-NVLink consequences.</p>
 
     <div class="tags">
         <span class="tag">AD102</span><span class="tag">AD103</span><span class="tag">AD104</span><span class="tag">AD106</span>
         <span class="tag">RTX 4090</span><span class="tag">L40S</span><span class="tag">L4</span>
         <span class="tag">TSMC 4N</span><span class="tag">GDDR6X</span>
-        <span class="tag">RT 4th gen</span><span class="tag">DLSS 3</span><span class="tag">OFA</span>
+        <span class="tag">RT 3rd gen</span><span class="tag">DLSS 3</span><span class="tag">OFA</span>
     </div>
 
     <div class="pipeline">
@@ -778,7 +778,7 @@
         <span class="pipeline-arrow">&rarr;</span>
         <span class="pipeline-step">TC4</span>
         <span class="pipeline-arrow">&rarr;</span>
-        <span class="pipeline-step">RT4</span>
+        <span class="pipeline-step">RT3</span>
         <span class="pipeline-arrow">&rarr;</span>
         <span class="pipeline-step">96 MB L2</span>
         <span class="pipeline-arrow">&rarr;</span>
@@ -792,9 +792,9 @@
     <ul class="contents-list">
         <li><a href="#slide-01">Ada at a Glance &mdash; Consumer + Workstation, No HPC Die</a></li>
         <li><a href="#slide-02">AD102 Die &mdash; Block Diagram</a></li>
-        <li><a href="#slide-03">The Ada SM &mdash; Doubled FP32 Plus FP8 Path on L40S</a></li>
-        <li><a href="#slide-04">4th-Generation Tensor Cores &mdash; FP8 (Sometimes)</a></li>
-        <li><a href="#slide-05">4th-Generation RT Cores &mdash; OMM &amp; DMM</a></li>
+        <li><a href="#slide-03">The Ada SM &mdash; Doubled FP32 Plus FP8-Capable Tensor Cores</a></li>
+        <li><a href="#slide-04">4th-Generation Tensor Cores &mdash; FP8 Across the Line</a></li>
+        <li><a href="#slide-05">3rd-Generation RT Cores &mdash; OMM &amp; DMM</a></li>
         <li><a href="#slide-06">DLSS 3 &amp; the Optical Flow Accelerator</a></li>
         <li><a href="#slide-07">96 MB L2 &mdash; Why This Big?</a></li>
         <li><a href="#slide-08">Process &amp; Voltages &mdash; TSMC 4N</a></li>
@@ -861,8 +861,8 @@
 
 <section class="slide" id="slide-03">
     <div class="slide-number">03</div>
-    <h2>The Ada SM &mdash; Doubled FP32 Plus FP8 Path on L40S</h2>
-    <p>The Ada SM inherits GA10x's "doubled FP32" partition layout with new RT and tensor cores. <strong>Crucially, the FP8 datapath is silicon-disabled on consumer SKUs (RTX 4090 etc.) and enabled only on workstation/datacenter Ada (L40, L40S, RTX 6000 Ada).</strong></p>
+    <h2>The Ada SM &mdash; Doubled FP32 Plus FP8-Capable Tensor Cores</h2>
+    <p>The Ada SM inherits GA10x's "doubled FP32" partition layout with new RT and tensor cores. <strong>FP8 (E4M3 / E5M2) is exposed in tensor cores across the entire Ada line &mdash; including the RTX 4090.</strong> What consumer Ada lacks vs Hopper is the Transformer Engine's dynamic per-tensor scaling, not the FP8 silicon itself.</p>
 
     <div class="diagram-grid cols-2">
         <div class="diagram-panel accent-border">
@@ -872,8 +872,8 @@
                 <li><strong>128 FP32</strong> cores (32/partition; doubled-FP32 like GA10x)</li>
                 <li>64 INT32 cores (16/partition)</li>
                 <li>2 FP64 cores per SM &mdash; 1:64 of FP32</li>
-                <li><strong>4 tensor cores</strong> (4th gen)</li>
-                <li><strong>1 RT core</strong> (4th gen) per SM</li>
+                <li><strong>4 tensor cores</strong> (4th gen, FP8-capable)</li>
+                <li><strong>1 RT core</strong> (3rd gen) per SM</li>
                 <li>16 LD/ST, 16 SFU</li>
             </ul>
         </div>
@@ -889,14 +889,14 @@
     </div>
 
     <div class="callout">
-        <div class="callout-label">FP8: enabled or fused-off?</div>
-        <p>Tensor cores on Ada are physically capable of FP8 E4M3 / E5M2 (the silicon is identical to Hopper's 4th-gen TC at the unit level). On RTX 4090 / 4080 / 4070 / 4060, the FP8 path is fused off in production binning. On <strong>L40, L40S, RTX 6000 Ada</strong>, it's enabled. NVIDIA charges a sizeable premium for the same die with FP8 unlocked.</p>
+        <div class="callout-label">FP8 vs Hopper's Transformer Engine</div>
+        <p>Tensor cores on Ada are physically capable of FP8 E4M3 / E5M2 on every Ada SKU (sm_89), RTX 4090 included. What Ada does not have is Hopper's Transformer Engine &mdash; the dynamic per-tensor scaling that automatically picks E4M3 vs E5M2 and tracks amax statistics. On Ada you do FP8 with explicit static scaling (e.g. via TransformerEngine library, TensorRT-LLM). Datacenter Ada (L40 / L40S / RTX 6000 Ada) markets the FP8 throughput; consumer Ada exposes the same instructions, just without the Transformer Engine's scheduling layer.</p>
     </div>
 </section>
 
 <section class="slide" id="slide-04">
     <div class="slide-number">04</div>
-    <h2>4th-Generation Tensor Cores &mdash; FP8 (Sometimes)</h2>
+    <h2>4th-Generation Tensor Cores &mdash; FP8 Across the Line</h2>
     <div class="table-wrap">
         <table>
             <thead><tr><th>Operation</th><th>RTX 4090 (2520 MHz)</th><th>L40S (2520 MHz)</th></tr></thead>
@@ -906,18 +906,18 @@
                 <tr><td>Tensor BF16 / FP16</td><td>165 TFLOPS</td><td>183 TFLOPS</td></tr>
                 <tr><td>Tensor BF16 / FP16 + 2:4 sparse</td><td>330 TFLOPS</td><td>366 TFLOPS</td></tr>
                 <tr><td>Tensor INT8</td><td>331 TOPS</td><td>366 TOPS</td></tr>
-                <tr><td><strong>Tensor FP8</strong></td><td><strong>not enabled</strong></td><td><strong>733 TFLOPS</strong></td></tr>
-                <tr><td><strong>Tensor FP8 + 2:4 sparse</strong></td><td><strong>not enabled</strong></td><td><strong>1466 TFLOPS</strong></td></tr>
+                <tr><td><strong>Tensor FP8</strong></td><td><strong>330 TFLOPS</strong></td><td><strong>733 TFLOPS</strong></td></tr>
+                <tr><td><strong>Tensor FP8 + 2:4 sparse</strong></td><td><strong>660 TFLOPS</strong></td><td><strong>1466 TFLOPS</strong></td></tr>
             </tbody>
         </table>
     </div>
-    <p>Ada does <strong>not</strong> have Hopper's WGMMA &mdash; matmul shapes stay at the older 16&times;8&times;16 sm_89 family, no warp-group async. So an L40S running FP8 inference still under-utilises its tensor cores compared to an H100 doing the same FLOPs &mdash; but it does so at much lower cost.</p>
+    <p>FP8 (E4M3 / E5M2) is exposed on every Ada SKU (sm_89). Ada does <strong>not</strong> have Hopper's WGMMA &mdash; matmul shapes stay at the older 16&times;8&times;16 sm_89 family, no warp-group async, and no Transformer Engine for dynamic per-tensor scaling. So an L40S running FP8 inference still under-utilises its tensor cores compared to an H100 doing the same FLOPs &mdash; but it does so at much lower cost.</p>
 </section>
 
 <section class="slide" id="slide-05">
     <div class="slide-number">05</div>
-    <h2>4th-Generation RT Cores &mdash; OMM &amp; DMM</h2>
-    <p>Two new fixed-function blocks added to the RT core:</p>
+    <h2>3rd-Generation RT Cores &mdash; OMM &amp; DMM</h2>
+    <p>Generation count: Turing = 1st, Ampere = 2nd, Ada = 3rd, Blackwell = 4th. Two new fixed-function blocks added to the Ada RT core:</p>
     <div class="diagram-grid cols-2">
         <div class="diagram-panel accent-border">
             <h4>Opacity Micromaps (OMM)</h4>
@@ -1081,16 +1081,16 @@
     <script>
     (function(){
         const data = {
-            '4090':    { die:'AD102 (cut)', sms:128, fp32:82.6, bf16:165, fp8:'no', vram:'24 GB GDDR6X', bw:1008, tdp:'450 W / no NVLink', note:'Consumer flagship; FP8 fused off; no NVLink &rarr; DP only.' },
-            '4080s':   { die:'AD103',       sms:80,  fp32:52.2, bf16:104, fp8:'no', vram:'16 GB GDDR6X', bw:736,  tdp:'320 W / no NVLink', note:'Refresh of 4080 with 23 Gbps GDDR6X.' },
-            '4080':    { die:'AD103',       sms:76,  fp32:48.7, bf16:98,  fp8:'no', vram:'16 GB GDDR6X', bw:716,  tdp:'320 W / no NVLink', note:'Tier-2 consumer.' },
-            '4070tis': { die:'AD103 (cut)', sms:66,  fp32:44.1, bf16:88,  fp8:'no', vram:'16 GB GDDR6X', bw:672,  tdp:'285 W / no NVLink', note:'16 GB on a mid-range card; popular for hobby ML.' },
-            '4070ti':  { die:'AD104',       sms:60,  fp32:40.1, bf16:80,  fp8:'no', vram:'12 GB GDDR6X', bw:504,  tdp:'285 W / no NVLink', note:'Mid-range; 12 GB tight for modern LLMs.' },
-            '4070':    { die:'AD104',       sms:46,  fp32:29.1, bf16:58,  fp8:'no', vram:'12 GB GDDR6X', bw:504,  tdp:'200 W / no NVLink', note:'Cut AD104; quiet cooler-friendly.' },
-            '4060ti':  { die:'AD106',       sms:34,  fp32:22.1, bf16:44,  fp8:'no', vram:'16 GB GDDR6 (or 8)', bw:288, tdp:'160 W / no NVLink', note:'16 GB variant attractive for entry-level ML; modest BW.' },
-            '6000ada': { die:'AD102 (full)',sms:142, fp32:91.1, bf16:182, fp8:'no', vram:'48 GB GDDR6 ECC', bw:960, tdp:'300 W / 2-link bridge', note:'Workstation flagship; ECC; FP8 NOT enabled here either.' },
+            '4090':    { die:'AD102 (cut)', sms:128, fp32:82.6, bf16:165, fp8:'330 TF', vram:'24 GB GDDR6X', bw:1008, tdp:'450 W / no NVLink', note:'Consumer flagship; FP8 exposed in tensor cores; no NVLink &rarr; DP only.' },
+            '4080s':   { die:'AD103',       sms:80,  fp32:52.2, bf16:104, fp8:'209 TF', vram:'16 GB GDDR6X', bw:736,  tdp:'320 W / no NVLink', note:'Refresh of 4080 with 23 Gbps GDDR6X.' },
+            '4080':    { die:'AD103',       sms:76,  fp32:48.7, bf16:98,  fp8:'195 TF', vram:'16 GB GDDR6X', bw:716,  tdp:'320 W / no NVLink', note:'Tier-2 consumer.' },
+            '4070tis': { die:'AD103 (cut)', sms:66,  fp32:44.1, bf16:88,  fp8:'176 TF', vram:'16 GB GDDR6X', bw:672,  tdp:'285 W / no NVLink', note:'16 GB on a mid-range card; popular for hobby ML.' },
+            '4070ti':  { die:'AD104',       sms:60,  fp32:40.1, bf16:80,  fp8:'160 TF', vram:'12 GB GDDR6X', bw:504,  tdp:'285 W / no NVLink', note:'Mid-range; 12 GB tight for modern LLMs.' },
+            '4070':    { die:'AD104',       sms:46,  fp32:29.1, bf16:58,  fp8:'117 TF', vram:'12 GB GDDR6X', bw:504,  tdp:'200 W / no NVLink', note:'Cut AD104; quiet cooler-friendly.' },
+            '4060ti':  { die:'AD106',       sms:34,  fp32:22.1, bf16:44,  fp8:'88 TF',  vram:'16 GB GDDR6 (or 8)', bw:288, tdp:'160 W / no NVLink', note:'16 GB variant attractive for entry-level ML; modest BW.' },
+            '6000ada': { die:'AD102 (full)',sms:142, fp32:91.1, bf16:182, fp8:'365 TF', vram:'48 GB GDDR6 ECC', bw:960, tdp:'300 W / 2-link bridge', note:'Workstation flagship; ECC; FP8 tensor throughput on tap.' },
             'l40s':    { die:'AD102 (full)',sms:142, fp32:91.6, bf16:183, fp8:'733 TF', vram:'48 GB GDDR6 ECC', bw:864, tdp:'350 W / no NVLink', note:'Sleeper FP8 inference card; datacenter EULA, half H100 cost.' },
-            'l40':     { die:'AD102 (full)',sms:142, fp32:90.5, bf16:181, fp8:'no', vram:'48 GB GDDR6 ECC', bw:864, tdp:'300 W / no NVLink', note:'L40S without FP8; graphics-focused datacenter card.' },
+            'l40':     { die:'AD102 (full)',sms:142, fp32:90.5, bf16:181, fp8:'362 TF', vram:'48 GB GDDR6 ECC', bw:864, tdp:'300 W / no NVLink', note:'Graphics-focused datacenter card; FP8 capable.' },
             'l4':      { die:'AD104',       sms:60,  fp32:30.3, bf16:121, fp8:'242 TF', vram:'24 GB GDDR6 ECC', bw:300, tdp:'72 W / no NVLink', note:'Single-slot 75 W slot-only successor to T4.' }
         };
         function rec(){
