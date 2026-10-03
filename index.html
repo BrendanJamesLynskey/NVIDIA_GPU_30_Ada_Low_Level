@@ -902,9 +902,9 @@
             <thead><tr><th>Operation</th><th>RTX 4090 (2520 MHz)</th><th>L40S (2520 MHz)</th></tr></thead>
             <tbody>
                 <tr><td>FP32 FMA</td><td>82.6 TFLOPS</td><td>91.6 TFLOPS</td></tr>
-                <tr><td>Tensor TF32</td><td>82.6 TFLOPS</td><td>91.6 TFLOPS</td></tr>
-                <tr><td>Tensor BF16 / FP16</td><td>165 TFLOPS</td><td>183 TFLOPS</td></tr>
-                <tr><td>Tensor BF16 / FP16 + 2:4 sparse</td><td>330 TFLOPS</td><td>366 TFLOPS</td></tr>
+                <tr><td>Tensor TF32</td><td>82.6 TFLOPS</td><td>183 TFLOPS</td></tr>
+                <tr><td>Tensor BF16 / FP16</td><td>165 TFLOPS (FP32 acc.)</td><td>362 TFLOPS</td></tr>
+                <tr><td>Tensor BF16 / FP16 + 2:4 sparse</td><td>330 TFLOPS</td><td>733 TFLOPS</td></tr>
                 <tr><td>Tensor INT8</td><td>661 TOPS</td><td>733 TOPS</td></tr>
                 <tr><td><strong>Tensor FP8</strong></td><td><strong>330 TFLOPS</strong> (FP32 acc.; 661 with FP16 acc.)</td><td><strong>733 TFLOPS</strong></td></tr>
                 <tr><td><strong>Tensor FP8 + 2:4 sparse</strong></td><td><strong>660 TFLOPS</strong></td><td><strong>1466 TFLOPS</strong></td></tr>
@@ -1089,7 +1089,7 @@
             '4070':    { die:'AD104',       sms:46,  fp32:29.1, bf16:58,  fp8:'117 TF', vram:'12 GB GDDR6X', bw:504,  tdp:'200 W / no NVLink', note:'Cut AD104; quiet cooler-friendly.' },
             '4060ti':  { die:'AD106',       sms:34,  fp32:22.1, bf16:44,  fp8:'88 TF',  vram:'16 GB GDDR6 (or 8)', bw:288, tdp:'160 W / no NVLink', note:'16 GB variant attractive for entry-level ML; modest BW.' },
             '6000ada': { die:'AD102 (full)',sms:142, fp32:91.1, bf16:182, fp8:'365 TF', vram:'48 GB GDDR6 ECC', bw:960, tdp:'300 W / no NVLink', note:'Workstation flagship; ECC; FP8 tensor throughput on tap.' },
-            'l40s':    { die:'AD102 (full)',sms:142, fp32:91.6, bf16:183, fp8:'733 TF', vram:'48 GB GDDR6 ECC', bw:864, tdp:'350 W / no NVLink', note:'Sleeper FP8 inference card; datacenter EULA, half H100 cost.' },
+            'l40s':    { die:'AD102 (full)',sms:142, fp32:91.6, bf16:362, fp8:'733 TF', vram:'48 GB GDDR6 ECC', bw:864, tdp:'350 W / no NVLink', note:'Sleeper FP8 inference card; datacenter EULA, half H100 cost.' },
             'l40':     { die:'AD102 (full)',sms:142, fp32:90.5, bf16:181, fp8:'362 TF', vram:'48 GB GDDR6 ECC', bw:864, tdp:'300 W / no NVLink', note:'Graphics-focused datacenter card; FP8 capable.' },
             'l4':      { die:'AD104',       sms:58,  fp32:30.3, bf16:121, fp8:'242 TF', vram:'24 GB GDDR6 ECC', bw:300, tdp:'72 W / no NVLink', note:'Single-slot 72 W slot-only successor to T4.' }
         };
