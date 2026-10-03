@@ -816,8 +816,8 @@
             <tbody>
                 <tr><td>AD102</td><td>144 (128 enabled on 4090)</td><td>576 (512 on 4090)</td><td>144 (128 on 4090)</td><td>RTX 4090 / RTX 6000 Ada / L40S</td><td>300&ndash;450 W</td></tr>
                 <tr><td>AD103</td><td>80</td><td>320</td><td>80</td><td>RTX 4080 Super / RTX 4080</td><td>320 W</td></tr>
-                <tr><td>AD104</td><td>60</td><td>240</td><td>60</td><td>RTX 4070 Ti Super / 4070 Ti</td><td>285 W</td></tr>
-                <tr><td>AD106</td><td>36</td><td>144</td><td>36</td><td>RTX 4060 Ti / L4</td><td>72&ndash;165 W</td></tr>
+                <tr><td>AD104</td><td>60</td><td>240</td><td>60</td><td>RTX 4070 Ti / 4070 / L4</td><td>72&ndash;285 W</td></tr>
+                <tr><td>AD106</td><td>36</td><td>144</td><td>36</td><td>RTX 4060 Ti</td><td>160&ndash;165 W</td></tr>
                 <tr><td>AD107</td><td>24</td><td>96</td><td>24</td><td>RTX 4060 / 4050 mobile</td><td>115 W</td></tr>
             </tbody>
         </table>
@@ -852,11 +852,11 @@
         </div>
         <div class="hierarchy-level">
             <div class="hierarchy-label">IO</div>
-            <div class="hierarchy-items"><span class="hierarchy-item">PCIe 4.0 x16</span><span class="hierarchy-item">no NVLink (consumer); RTX 6000 Ada has bridge</span></div>
+            <div class="hierarchy-items"><span class="hierarchy-item">PCIe 4.0 x16</span><span class="hierarchy-item">no NVLink (consumer or RTX 6000 Ada)</span></div>
         </div>
     </div>
 
-    <p>Density: 76.3 B / 608 mm&sup2; = <strong>125.5 M/mm&sup2;</strong> &mdash; nearly 2&times; the GA100 density and 2.8&times; the Samsung 8N GA102. The TSMC 4N node was a huge generational lift, especially for AD102 which managed to fit ~3&times; the SMs of GA102 on 3% less silicon.</p>
+    <p>Density: 76.3 B / 608 mm&sup2; = <strong>125.5 M/mm&sup2;</strong> &mdash; nearly 2&times; the GA100 density and 2.8&times; the Samsung 8N GA102. The TSMC 4N node was a huge generational lift, especially for AD102 which managed to fit ~1.7&times; the SMs of GA102 (144 vs 84) on 3% less silicon.</p>
 </section>
 
 <section class="slide" id="slide-03">
@@ -905,8 +905,8 @@
                 <tr><td>Tensor TF32</td><td>82.6 TFLOPS</td><td>91.6 TFLOPS</td></tr>
                 <tr><td>Tensor BF16 / FP16</td><td>165 TFLOPS</td><td>183 TFLOPS</td></tr>
                 <tr><td>Tensor BF16 / FP16 + 2:4 sparse</td><td>330 TFLOPS</td><td>366 TFLOPS</td></tr>
-                <tr><td>Tensor INT8</td><td>331 TOPS</td><td>366 TOPS</td></tr>
-                <tr><td><strong>Tensor FP8</strong></td><td><strong>330 TFLOPS</strong></td><td><strong>733 TFLOPS</strong></td></tr>
+                <tr><td>Tensor INT8</td><td>661 TOPS</td><td>733 TOPS</td></tr>
+                <tr><td><strong>Tensor FP8</strong></td><td><strong>330 TFLOPS</strong> (FP32 acc.; 661 with FP16 acc.)</td><td><strong>733 TFLOPS</strong></td></tr>
                 <tr><td><strong>Tensor FP8 + 2:4 sparse</strong></td><td><strong>660 TFLOPS</strong></td><td><strong>1466 TFLOPS</strong></td></tr>
             </tbody>
         </table>
@@ -950,8 +950,8 @@
             <tbody>
                 <tr><td>AD102</td><td>96 MB</td><td>Full L2; cut to 72 MB on RTX 4090.</td></tr>
                 <tr><td>AD103</td><td>64 MB</td><td>RTX 4080.</td></tr>
-                <tr><td>AD104</td><td>48 MB</td><td>RTX 4070 Ti.</td></tr>
-                <tr><td>AD106</td><td>32 MB</td><td>RTX 4060 Ti / L4.</td></tr>
+                <tr><td>AD104</td><td>48 MB</td><td>RTX 4070 Ti / L4.</td></tr>
+                <tr><td>AD106</td><td>32 MB</td><td>RTX 4060 Ti.</td></tr>
                 <tr><td>AD107</td><td>32 MB</td><td>RTX 4060.</td></tr>
             </tbody>
         </table>
@@ -1035,7 +1035,7 @@
 <section class="slide" id="slide-11">
     <div class="slide-number">11</div>
     <h2>No NVLink &amp; What That Costs You</h2>
-    <p>Ada was the <strong>first generation since Pascal where the consumer flagship has no NVLink at all</strong>. RTX 3090 had a 4-link bridge; RTX 4090 has none. Workstation Ada (RTX 6000 Ada) retains a 2-link bridge for two-card pairing; L40 / L40S / L4 datacenter cards have <em>no</em> NVLink &mdash; multi-GPU on those goes over PCIe 4 P2P only.</p>
+    <p>Ada was the <strong>first generation since Pascal where the consumer flagship has no NVLink at all</strong>. RTX 3090 had a 4-link bridge; RTX 4090 has none. Workstation Ada (RTX 6000 Ada) has no NVLink either; L40 / L40S / L4 datacenter cards have <em>no</em> NVLink &mdash; multi-GPU on those goes over PCIe 4 P2P only.</p>
 
     <ul>
         <li><strong>2&times; RTX 4090 over PCIe 4 x16</strong>: 32 GB/s/dir P2P &mdash; tensor parallel scaling 1.3&ndash;1.5&times; (vs 1.9&times; on a 4-link NVLink bridge).</li>
@@ -1088,10 +1088,10 @@
             '4070ti':  { die:'AD104',       sms:60,  fp32:40.1, bf16:80,  fp8:'160 TF', vram:'12 GB GDDR6X', bw:504,  tdp:'285 W / no NVLink', note:'Mid-range; 12 GB tight for modern LLMs.' },
             '4070':    { die:'AD104',       sms:46,  fp32:29.1, bf16:58,  fp8:'117 TF', vram:'12 GB GDDR6X', bw:504,  tdp:'200 W / no NVLink', note:'Cut AD104; quiet cooler-friendly.' },
             '4060ti':  { die:'AD106',       sms:34,  fp32:22.1, bf16:44,  fp8:'88 TF',  vram:'16 GB GDDR6 (or 8)', bw:288, tdp:'160 W / no NVLink', note:'16 GB variant attractive for entry-level ML; modest BW.' },
-            '6000ada': { die:'AD102 (full)',sms:142, fp32:91.1, bf16:182, fp8:'365 TF', vram:'48 GB GDDR6 ECC', bw:960, tdp:'300 W / 2-link bridge', note:'Workstation flagship; ECC; FP8 tensor throughput on tap.' },
+            '6000ada': { die:'AD102 (full)',sms:142, fp32:91.1, bf16:182, fp8:'365 TF', vram:'48 GB GDDR6 ECC', bw:960, tdp:'300 W / no NVLink', note:'Workstation flagship; ECC; FP8 tensor throughput on tap.' },
             'l40s':    { die:'AD102 (full)',sms:142, fp32:91.6, bf16:183, fp8:'733 TF', vram:'48 GB GDDR6 ECC', bw:864, tdp:'350 W / no NVLink', note:'Sleeper FP8 inference card; datacenter EULA, half H100 cost.' },
             'l40':     { die:'AD102 (full)',sms:142, fp32:90.5, bf16:181, fp8:'362 TF', vram:'48 GB GDDR6 ECC', bw:864, tdp:'300 W / no NVLink', note:'Graphics-focused datacenter card; FP8 capable.' },
-            'l4':      { die:'AD104',       sms:60,  fp32:30.3, bf16:121, fp8:'242 TF', vram:'24 GB GDDR6 ECC', bw:300, tdp:'72 W / no NVLink', note:'Single-slot 75 W slot-only successor to T4.' }
+            'l4':      { die:'AD104',       sms:58,  fp32:30.3, bf16:121, fp8:'242 TF', vram:'24 GB GDDR6 ECC', bw:300, tdp:'72 W / no NVLink', note:'Single-slot 72 W slot-only successor to T4.' }
         };
         function rec(){
             const k = document.getElementById('d-sku').value;
